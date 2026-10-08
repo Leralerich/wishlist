@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Мій вішліст 💖</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: system-ui, -apple-system, sans-serif;
+    background: linear-gradient(180deg, #ffe4ef 0%, #fff0f6 100%);
+    color: #5a2a45;
+    min-height: 100vh;
+    padding: 40px 20px 60px;
+  }
+
+  /* Екран привітання */
+  #welcome {
+    position: fixed;
+    inset: 0;
+    background: linear-gradient(180deg, #ffb6d5 0%, #ff8fc0 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    z-index: 10;
+    transition: opacity 0.6s ease;
+    text-align: center;
+    padding: 20px;
+  }
+  #welcome.hidden {
+    opacity: 0;
+    pointer-events: none;
+    visibility: hidden;
+  }
+  #welcome h1 {
+    font-size: clamp(28px, 6vw, 48px);
+    color: #fff;
+    text-shadow: 0 2px 12px rgba(180, 0, 90, 0.3);
+  }
+  #welcome p {
+    color: #fff;
+    font-size: clamp(15px, 3vw, 19px);
+    opacity: 0.95;
+  }
+  #welcome button {
+    margin-top: 10px;
+    padding: 14px 36px;
+    font-size: 17px;
+    border: none;
+    border-radius: 50px;
+    background: #fff;
+    color: #e0559a;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 6px 20px rgba(180, 0, 90, 0.25);
+    transition: transform 0.15s;
+  }
+  #welcome button:hover { transform: scale(1.05); }
+
+  /* Основний контент */
+  #main {
+    display: none;
+  }
+  #main.visible {
+    display: block;
+  }
+
+  h2.title {
+    text-align: center;
+    color: #d94f96;
+    font-size: clamp(24px, 5vw, 34px);
+    margin-bottom: 30px;
+  }
+
+  .list {
+    max-width: 720px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+  }
+
+  .item {
+    background: #fff;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 4px 18px rgba(217, 79, 150, 0.15);
+    border: 2px solid #ffd6e8;
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+  .item:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 26px rgba(217, 79, 150, 0.25);
+  }
+
+  .item img {
+    width: 100%;
+    height: 260px;
+    object-fit: cover;
+    background: #ffe4ef;
+    display: block;
+  }
+
+  .item-body {
+    padding: 18px 22px 22px;
+  }
+
+  .item h3 {
+    font-size: 20px;
+    color: #b83a7a;
+    margin-bottom: 10px;
+  }
+
+  .item a {
+    display: inline-block;
+    margin-top: 6px;
+    color: #fff;
+    background: linear-gradient(90deg, #ff8fc0, #e0559a);
+    text-decoration: none;
+    padding: 10px 22px;
+    border-radius: 50px;
+    font-size: 15px;
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(224, 85, 154, 0.35);
+    transition: transform 0.15s;
+  }
+  .item a:hover { transform: scale(1.05); }
+
+  .empty {
+    text-align: center;
+    color: #c97aa8;
+    font-size: 16px;
+    padding: 40px 20px;
+  }
+</style>
+</head>
+<body>
+
+<!-- Привітання -->
+<div id="welcome">
+  <h1>Привіт-привіт! 💕</h1>
+  <p>Той самий довгоочікуваний wishlist ❤️</p>
+  <button id="openBtn">Подивитися список</button>
+</div>
+
+<!-- Список -->
+<div id="main">
+  <h2 class="title">Мої бажання 🌸</h2>
+  <div class="list" id="list"></div>
+</div>
+
+<script>
+  // ТУТ ЗМІНЮЙ СВОЇ БАЖАННЯ:
+  // photo — посилання на картинку (або шлях до файлу)
+  // link  — посилання на товар
+  var wishes = [
+    {
+      title: 'Бiлий комод',
+      photo: 'photo_2026-10-09_00-10-52 (1).jpg',
+      link: 'https://sofino.ua/komod-mebex-1002h402h774vm3b-1000-bilij/g-2788949'
+    },
+{
+      title: 'Фреза',
+      photo: 'photo_2026-10-09_00-16-10(4).jpg',
+      link: 'https://million-nails.com.ua/ua/p2340956112-professionalnyj-frezer-dlya.html?srsltid=AU7gw4VPX8AhJbLyNuibUl-1qcvfAF2rVNDFioYvxr0ScBYLN3DiumMr'
+    },
+{
+      title: 'Рожева постiль',
+      photo: 'photo_2026-10-09_00-38-32(3).jpg',
+      link: 'https://bedclozzzes.com.ua/product/odnotonnyj-ranfors-pink-24/'
+    },
+{
+      title: 'Рожева штора',
+      photo: 'photo_2026-10-09_00-36-47(2).jpg',
+      link: 'https://prom.ua/p2402886201-shtora-blekaut-tsvet.html?utm_source=google_pmax&utm_medium=cpc&utm_content=pmax&utm_campaign=Pmax_cpa_1538_okonnye_rollety_zhalyuzi_i_dekoratsiya_okon_5330921877&gad_source=1&gad_campaignid=22943752745&gclid=CjwKCAjw_pzWBhAkEiwAwDCi1XxIHwd7opmBY4D8UBrmE6wEow1v5Jql_bKH9B9zdyCHkY6FGygEWxoCVrQQAvD_BwE'
+    },
+{
+      title: 'Лампа ультрафiолетова',
+      photo: 'photo_2026-10-09_00-49-37(5).jpg',
+      link: 'https://million-nails.com.ua/ua/p2513298764-lampa-gibkaya-akummulyatore.html?srsltid=AU7gw4WNJOQohnApjupsOudvVzKibkUJYk2OWR8IPn3svBxBv0z3il3n'
+    },
+{
+      title: 'Пуховiк',
+      photo: 'photo_2026-10-09_00-55-34(6).jpg',
+      link: 'https://www.instagram.com/p/DdbetsJCHxY/?exln=bGo1cXVoNHAwZHV2'
+    },
+{
+      title: 'Кухоннi ваги',
+      photo: 'photo_2026-10-09_00-57-24(7).jpg',
+      link: 'https://prom.ua/m4765195407230880534-vesy-kuhonnye-pischevye10.html?p=2994141743'
+    },
+{
+      title: 'Тонер',
+      photo: 'photo_2026-10-09_00-58-54(8).jpg',
+      link: 'https://makeup.com.ua/ua/product/1430719/?gad_source=1&gad_campaignid=17593693380&gclid=CjwKCAjw_pzWBhAkEiwAwDCi1fNtrxh0hDgXD7IYvQyNIEHKDpHMx08WKLrJMexldZHTgw5vWLjNwBoCK_gQAvD_BwE'
+    },
+{
+      title: 'Гель для душа',
+      photo: 'photo_2026-10-09_00-00-11(9).jpg',
+      link: 'https://eva.ua/pr2111489/'
+    },
+{
+      title: 'Акриловi фарби',
+      photo: 'photo_2026-10-09_01-01-46(10).jpg',
+      link: 'https://prom.ua/p3138279274-professionalnye-akrilovye-kraski.html?utm_source=google_pmax&utm_medium=cpc&utm_content=pmax&utm_campaign=Pmax_cpa_211111_hudozhestvennye_prinadlezhnosti_5297199152&gad_source=1&gad_campaignid=22907533124&gclid=CjwKCAjw_pzWBhAkEiwAwDCi1e7vt6UfpCcadsK8WfVeEhpVqex6zEkRJT3Fg7soWiOyD4ifJAxZeRoCMscQAvD_BwE'
+    },
+{
+      title: 'Полiмерна глина',
+      photo: 'photo_2026-10-09_01-02-43(11).jpg',
+      link: 'https://prom.ua/p2829357836-polimernaya-glina-fimo.html'
+    },
+{
+      title: 'Парфум пiон',
+      photo: 'photo_2026-10-09_01-04-07(12).jpg',
+      link: 'https://sistersaroma.com/ru/parfumy/travel-parfum-peonyholic/'
+    },
+{
+      title: 'Парфум тюльпан',
+      photo: 'photo_2026-10-09_01-05-30(13).jpg',
+      link: 'https://sistersaroma.com/ru/parfumy/travel-parfum-tulip-me/'
+    },
+{
+      title: 'Для ламiнування вiй',
+      photo: 'photo_2026-10-09_01-06-39(14).jpg',
+      link: 'https://prom.ua/p2416035586-nabor-sostavov-zola.html?utm_source=google_pmax&utm_medium=cpc&utm_content=pmax&utm_campaign=Pmax_cpa_82101_10_kosmetika_dekorativnaya_265945592&gad_source=1&gad_campaignid=24106792754&gclid=CjwKCAjw_pzWBhAkEiwAwDCi1Y_M-YbxjbRap9EN_k7h0pA1tLrs3ZfmqwwA9ldII_L9Ecep9YAnxxoCjP4QAvD_BwE'
+    },
+
+
+    {
+      title: 'Набiр для ламiнування вiй',
+      photo: 'photo_2026-10-09_01-08-03(15).jpg',
+      link: 'https://prom.ua/p3057555345-nabor-dlya-laminirovaniya.html?utm_source=google_pmax&utm_medium=cpc&utm_content=pmax&utm_campaign=Pmax_cpa_82101_10_kosmetika_dekorativnaya_265945592&gad_source=1&gad_campaignid=24106792754&gclid=CjwKCAjw_pzWBhAkEiwAwDCi1axH-Wf9IzHaZJBRef13mcow5hpqvUnS2iLoJuH53Vc_xOHj-EWkihoCSGAQAvD_BwE'
+    },
+    {
+      title: 'Мультитаскер Unico Icon',
+      photo: 'photo_2026-10-09_00-22-24(16).jpg',
+      link: 'https://prom.ua/p2797399487-unico-multitasker-icon.html?utm_source=google_pmax&utm_medium=cpc&utm_content=pmax&utm_campaign=Pmax_cpa_82101_10_kosmetika_dekorativnaya_265945592&gad_source=1&gad_campaignid=24106792754&gclid=CjwKCAjw_pzWBhAkEiwAwDCi1VcojJF0CUybkAjeqLP0m32h0sOoQs03B82isI8LC3l7xZgz1CRF0RoCFe8QAvD_BwE'
+    }
+  ];
+
+  // Показати список
+  function showList() {
+    document.getElementById('welcome').classList.add('hidden');
+    document.getElementById('main').classList.add('visible');
+  }
+
+  // Намалювати список
+  function render() {
+    var list = document.getElementById('list');
+    if (wishes.length === 0) {
+      list.innerHTML = '<div class="empty">Поки що бажань немає 🌷</div>';
+      return;
+    }
+    var html = '';
+    for (var i = 0; i < wishes.length; i++) {
+      var w = wishes[i];
+      html += '<div class="item">';
+      if (w.photo) {
+        html += '<img src="' + w.photo + '" alt="' + w.title + '">';
+      }
+      html += '<div class="item-body">';
+      html += '<h3>' + w.title + '</h3>';
+      if (w.link) {
+        html += '<a href="' + w.link + '" target="_blank">Відкрити посилання →</a>';
+      }
+      html += '</div></div>';
+    }
+    list.innerHTML = html;
+  }
+
+  // Прив'язуємо кнопку ПІСЛЯ завантаження сторінки
+  document.addEventListener('DOMContentLoaded', function () {
+    document.getElementById('openBtn').addEventListener('click', showList);
+    render();
+  });
+</script>
+
+</body>
+</html>
